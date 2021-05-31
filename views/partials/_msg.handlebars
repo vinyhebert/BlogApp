@@ -1,0 +1,9 @@
+<footer class="footer navbar-fixed-bottom">
+    {{#if success_msg}} <!--Se existir uma msg de sucesso, faça oq estiver abaixo -->
+    <div class="alert alert-success">{{success_msg}}</div> <!--success_msg é a variavel global que criamos no inicio -->
+    {{/if}}
+
+    {{#if error_msg}}
+    <div class="alert alert-danger">{{error_msg}}</div> <!--error_msg é a variavel global que criamos no inicio também -->
+    {{/if}}
+</footer>
