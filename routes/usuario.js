@@ -3,6 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 
 const bcrypt = require('bcryptjs')
+const passport = require ('passport')
 
 require("../models/Usuarios")
 const Usuarios = mongoose.model("usuarios")
@@ -47,9 +48,10 @@ router.post("/registro", (req, res) => {
             }else {
                 
                 const novoUsuario = new Usuarios({
-                    nome: req.body.nome,
-                    email: req.body.email,
-                    senha: req.body.senha
+                    nome:   req.body.nome,
+                    email:  req.body.email,
+                    senha:  req.body.senha,
+                    eAdmin: 1
                 })
                 //Hash a senha
                 bcrypt.genSalt(10, (erro, salt) => {
@@ -78,9 +80,18 @@ router.post("/registro", (req, res) => {
     }
 })
 
-//login
+
 router.get("/login", (req, res) => {
     res.render("usuarios/login")
+})
+
+//login
+router.post("/login", (req, res, next) => {
+   passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/usuarios/login",
+        failureFlash: true
+   })(req, res, next)
 })
 
 module.exports = router
