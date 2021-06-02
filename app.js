@@ -17,6 +17,8 @@ const usuarios = require("./routes/usuario")
 const passport = require("passport")
 require('./config/auth')(passport)
 
+const {eOperator} = require("./helpers/eOperator")
+
 const app = express()
 
 app.use(express.static("public"))
@@ -42,7 +44,9 @@ app.use(express.static("public"))
         res.locals.success_msg = req.flash("success_msg") //locals -> criar variavel global (success_msg)
         res.locals.error_msg = req.flash("error_msg")
         res.locals.error = req.flash("error")
-        res.locals.user = req.user || null //Armazena dados da sessão
+        console.log(req.user)
+        res.locals.user = req.user /* || null */ //Armazena dados da sessão
+        
         next()
     })
     
@@ -69,7 +73,7 @@ app.use(express.static("public"))
     app.use(express.static(path.join(__dirname,"public"))) // config. dos arquivos statics
    
 //Rotas
-app.get('/', (req, res) => {
+app.get('/',eOperator, (req, res) => {
     Postagem.find().populate("categoria").sort({data: "desc"}).lean().then((postagens) => {
         res.render('index', {postagens:postagens})
     }).catch ((err) => {
@@ -79,7 +83,7 @@ app.get('/', (req, res) => {
    
 })
 
-app.get("/postagem/:slug", (req, res) => {
+app.get("/postagem/:slug",eOperator, (req, res) => {
     Postagem.findOne({slug: req.params.slug}).lean().then((postagem) => {
         if (postagem){
             res.render('postagem/index', {postagem:postagem})
@@ -94,7 +98,7 @@ app.get("/postagem/:slug", (req, res) => {
 })
 
 //categorias
-app.get('/categorias', (req, res) => {
+app.get('/categorias',eOperator, (req, res) => {
     Categoria.find().lean().then((categorias) =>{
         res.render('categorias/index', {categorias:categorias})
     }).catch ((err) =>{
@@ -103,7 +107,7 @@ app.get('/categorias', (req, res) => {
     })
 })
 
-app.get('/categorias/:slug', (req, res) => {
+app.get('/categorias/:slug',eOperator, (req, res) => {
     Categoria.findOne({slug: req.params.slug}).lean().then((categoria) => {
         if (categoria){
             
@@ -131,7 +135,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/posts', (req, res) => {
+app.get('/posts', eOperator,(req, res) => {
     res.send("Lista Posts")
 })
 

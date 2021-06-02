@@ -8,9 +8,9 @@ const Categoria = mongoose.model("categorias")
 
 require("../models/Postagem")
 const Postagem = mongoose.model("postagens")
+
+//Controle de Acesso
 const {eAdmin} = require("../helpers/eAdmin") //Dentro do objeto 'eAdmin' capturamos somente a função eAdmin, crinado uma variavel com esse nome
-
-
 
 router.get("/post", eAdmin,(req, res)=> {
     res.send("Pagina de Post")
